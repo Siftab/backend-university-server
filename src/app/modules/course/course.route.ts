@@ -15,7 +15,7 @@ router.post("/create-course",
     validateRequest(courseValidation.createCourseValidation),
     CourseControllers.createACourse)
 router.delete("/delete-course/:id",CourseControllers.deleteCourseFromDb)
-router.patch("/update-course/:id",validateRequest(courseValidation.updatePreRequisiteCourseValidation),CourseControllers.updateCourse)
+router.patch("/update-course/:id",validateRequest(courseValidation.updateCourseValidationSchema),CourseControllers.updateCourse)
 
 
 
