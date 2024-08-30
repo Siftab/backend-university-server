@@ -1,143 +1,158 @@
+import QueryBuilder from '../../builder/QueryBuilder';
+import { Tcourse, TcourseFaculty } from './course.interface';
+import { Course, CourseFaculty } from './course.model';
+import { courseSearchableFields } from './course.constants';
+import mongoose from 'mongoose';
+import AppError from '../../errors/AppError';
+import httpStatus from 'http-status';
 
-import QueryBuilder from "../../builder/QueryBuilder"
-import { Tcourse } from "./course.interface"
-import { Course } from "./course.model"
-import { courseSearchableFields } from "./course.constants"
-import mongoose from "mongoose"
-import AppError from "../../errors/AppError"
-import httpStatus from "http-status"
+const createCourse = async (payload: Tcourse) => {
+  const result = await Course.create(payload);
 
-
-
-
-const createCourse = async(payload:Tcourse)=>{
-
-    const result = await Course.create(payload)
-
-    return result
-}
-const getAllCourseFromDb = async(query:Record<string,unknown>)=>{
-
-
-    const coursequery = new QueryBuilder(Course.find().populate("PreRequisiteCourse.course")
-    ,query )
+  return result;
+};
+const getAllCourseFromDb = async (query: Record<string, unknown>) => {
+  const coursequery = new QueryBuilder(
+    Course.find().populate('PreRequisiteCourse.course'),
+    query,
+  )
     .search(courseSearchableFields)
     .filter()
     .sort()
     .paginate()
-    .fields()
+    .fields();
 
+  const result = await coursequery.modelQuery;
 
-    const result = await coursequery.modelQuery 
+  return result;
+};
+const getSingleCourseFromDb = async (id: string) => {
+  const result = await Course.findById(id).populate(
+    'PreRequisiteCourse.course',
+  );
 
-    return result
-}
-const getSingleCourseFromDb = async(id:string )=>{
+  return result;
+};
+const deleteSingleCourseFromDb = async (id: string) => {
+  const result = await Course.findByIdAndUpdate(
+    id,
+    { isDeleted: true },
+    {
+      new: true,
+    },
+  ).populate('PreRequisiteCourse.course');
 
-    const result = await Course.findById(id).populate("PreRequisiteCourse.course")
+  return result;
+};
 
-    return result
-}
-const deleteSingleCourseFromDb = async(id:string )=>{
+const updateCourseIntoDb = async (id: string, payload: Partial<Tcourse>) => {
+  const { PreRequisiteCourse, ...rest } = payload;
 
-    const result = await Course.findByIdAndUpdate(id
-        ,{isDeleted: true},{
-            new:true
-        }
-    ).
-    populate("PreRequisiteCourse.course")
+  const session = await mongoose.startSession();
 
-    return result
-}
-
-const updateCourseIntoDb = async(id:string,payload : Partial<Tcourse>)=>{
-    
-
-    const {PreRequisiteCourse, ...rest} =payload
-
-    const session =await mongoose.startSession()
-
-    try {
-         session.startTransaction()
-        const updateBasicCourseInfo = await Course.findByIdAndUpdate(id,
-            rest,
-            {
-                new:true
-                ,runValidators:true,
-                session
-            }
-        )
-        if(!updateBasicCourseInfo){
-            throw new AppError(httpStatus.BAD_REQUEST,"Failed to Update Course")
-        }
-    
-    
-        if(PreRequisiteCourse && PreRequisiteCourse.length >0){
-                    // filter out the new course field 
-                const newPreRequisiteCourse = PreRequisiteCourse?.filter(el=> el.course && !el.isDeleted)
-                // filtering out the delted course filed 
-            const deletedCourse = PreRequisiteCourse.filter(el => el.course && el.isDeleted).map(el =>el.course)
-            console.log(deletedCourse)
-           const deletedPreRequisites= await Course.findByIdAndUpdate(id,
-                {
-                    $pull: {PreRequisiteCourse :{course: {$in: deletedCourse}}}
-                },
-                {
-                    new:true
-                    ,runValidators:true
-                    ,session
-                }
-             )
-             if(!deletedPreRequisites){
-                throw new AppError(httpStatus.BAD_REQUEST,"Failed to Update COurse ")
-             }
-    
-             const updateNewPreRequisiteCourse= await Course.findByIdAndUpdate(id,
-                {
-                    $addToSet:{PreRequisiteCourse: {$each : newPreRequisiteCourse}}
-                },
-                {
-                    new:true
-                    ,runValidators:true,
-                    session
-                }
-             )
-             if(!updateNewPreRequisiteCourse){
-                throw new AppError(httpStatus.BAD_REQUEST,"failed to update course ")
-             }
-
-
-           
-        }
-
-        await session.commitTransaction()
-        await session.endSession()
-
-
-        const result = await Course.findById(id).populate("PreRequisiteCourse.course")
-
-        return result
-    
-        
-    } catch (error) {
-          await session.abortTransaction()
-           await session.endSession()
-           throw new AppError(httpStatus.BAD_REQUEST,"Failed to update the course ")
+  try {
+    session.startTransaction();
+    const updateBasicCourseInfo = await Course.findByIdAndUpdate(id, rest, {
+      new: true,
+      runValidators: true,
+      session,
+    });
+    if (!updateBasicCourseInfo) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to Update Course');
     }
 
+    if (PreRequisiteCourse && PreRequisiteCourse.length > 0) {
+      // filter out the new course field
+      const newPreRequisiteCourse = PreRequisiteCourse?.filter(
+        (el) => el.course && !el.isDeleted,
+      );
+      // filtering out the delted course filed
+      const deletedCourse = PreRequisiteCourse.filter(
+        (el) => el.course && el.isDeleted,
+      ).map((el) => el.course);
+      const deletedPreRequisites = await Course.findByIdAndUpdate(
+        id,
+        {
+          $pull: { PreRequisiteCourse: { course: { $in: deletedCourse } } },
+        },
+        {
+          new: true,
+          runValidators: true,
+          session,
+        },
+      );
+      if (!deletedPreRequisites) {
+        throw new AppError(httpStatus.BAD_REQUEST, 'Failed to Update COurse ');
+      }
 
-    
+      const updateNewPreRequisiteCourse = await Course.findByIdAndUpdate(
+        id,
+        {
+          $addToSet: { PreRequisiteCourse: { $each: newPreRequisiteCourse } },
+        },
+        {
+          new: true,
+          runValidators: true,
+          session,
+        },
+      );
+      if (!updateNewPreRequisiteCourse) {
+        throw new AppError(httpStatus.BAD_REQUEST, 'failed to update course ');
+      }
+    }
 
+    await session.commitTransaction();
+    await session.endSession();
+
+    const result = await Course.findById(id).populate(
+      'PreRequisiteCourse.course',
+    );
+
+    return result;
+  } catch (error) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw new AppError(httpStatus.BAD_REQUEST, 'Failed to update the course ');
+  }
+};
+
+const assignFacultiesWithCourseIntoDb = async (
+  id: string,
+  payload: Partial<TcourseFaculty>,
+) => {
+  const result = await CourseFaculty.findByIdAndUpdate(id, {
+    course:id,
+    $addToSet: { faculties: { $each: payload } },
+  },{
+    upsert:true,
+    new:true    
+  });
+  return result
+};
+
+const deleteFacultiesFromCourseIntoDb = async(id:string,payload:Partial<TcourseFaculty>)=>{
+
+
+    const result = await CourseFaculty.findByIdAndUpdate(id,{
+        $pull:{
+            faculties:{
+                $in:payload
+            }
+        }
+    },{
+        new:true
+    })
+
+
+return result
 }
 
-
-
-
-export const CourseServices ={
-    createCourse,
-    getAllCourseFromDb,
-    getSingleCourseFromDb,
-    deleteSingleCourseFromDb,
-    updateCourseIntoDb
-
-}   
+export const CourseServices = {
+  createCourse,
+  getAllCourseFromDb,
+  getSingleCourseFromDb,
+  deleteSingleCourseFromDb,
+  updateCourseIntoDb,
+  assignFacultiesWithCourseIntoDb,
+  deleteFacultiesFromCourseIntoDb
+};

@@ -2,6 +2,7 @@ import httpStatus from "http-status";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { CourseServices } from "./course.services";
+// import { CourseFaculty } from "./course.model";
 
 
 
@@ -76,6 +77,36 @@ const updateCourse = catchAsync(async(req,res)=>{
 })
 
 
+// assigning Faculties 
+
+ const assignFacultiesWithCourseIntoDb = catchAsync(async(req,res)=>{
+    
+    const {courseId} = req.params;
+    const {faculties}= req.body;
+
+    const result = await CourseServices.assignFacultiesWithCourseIntoDb(courseId,faculties)
+
+    sendResponse(res,{
+        statusCode:httpStatus.OK,
+        success:true,
+        message:"CourseFaculty  updated successfully ",
+        data:result
+    })
+    
+ })
+
+const deleteFacultiesFromCourseIntoDb = catchAsync(async(req,res)=>{
+    const {courseId}= req.params
+    const {faculties}= req.body 
+    const result = await CourseServices.deleteFacultiesFromCourseIntoDb(courseId,faculties)
+
+    sendResponse(res,{
+        statusCode:httpStatus.OK,
+        success:true,
+        message:"faculties delted succesfully",
+        data:result
+    })
+})
 
 
 
@@ -83,9 +114,11 @@ const updateCourse = catchAsync(async(req,res)=>{
 // pacakage export 
 
 export const CourseControllers ={
+    deleteFacultiesFromCourseIntoDb,
     createACourse,
     deleteCourseFromDb,
     getAllCourseFromDb,
     getSingleCourseFromDb,
-    updateCourse
+    updateCourse,
+    assignFacultiesWithCourseIntoDb
 }
