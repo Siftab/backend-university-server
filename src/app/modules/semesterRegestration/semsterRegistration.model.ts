@@ -15,7 +15,7 @@ academicSemester:{
 },
 status:{
     type:String,
-    enum:semesterRegistrationStatus[Symbol],
+    enum:semesterRegistrationStatus,
     default:"UPCOMING",
     
 }
