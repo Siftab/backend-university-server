@@ -10,7 +10,6 @@ import { semesterRegistrationServices } from "./semesterregestration.services";
 const createSemesterRegistrationIntoDB = catchAsync(async(req,res)=>{
 
 
-
  const result = await semesterRegistrationServices.createSemesterServiceIntoDb(req.body)   
 
 sendResponse(res,{

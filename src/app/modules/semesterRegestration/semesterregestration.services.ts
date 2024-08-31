@@ -11,7 +11,9 @@ import { SemesterRegistration } from "./semsterRegistration.model";
 const createSemesterServiceIntoDb = async (payload:TsemesterRegistration)=>{
  
     const academicSemester = payload?.academicSemester;
+    const isSemesterRegistrationExists = await SemesterRegistration.findOne({academicSemester})
 
+ 
     if(academicSemester){
         const isAcademicSemesterExist = await AcademicSemester.findById(academicSemester)
 
@@ -21,9 +23,17 @@ const createSemesterServiceIntoDb = async (payload:TsemesterRegistration)=>{
 
     }
 
+    if(isSemesterRegistrationExists){
+        throw new AppError(httpStatus.CONFLICT,"this Semester is already Registered")
+    }
 
 
-//   return result
+    const result = await SemesterRegistration.create(payload)
+ 
+
+
+
+  return result
 
 }
 

@@ -6,6 +6,7 @@ import { StudentRoutes } from '../modules/student/student.route';
 import { UserRoutes } from '../modules/user/user.route';
 // import path from 'path';
 import { courseRouter } from '../modules/course/course.route';
+import { semesterRegistrationRouter } from '../modules/semesterRegestration/semesterRegistration.route';
 
 const router = Router();
 
@@ -33,6 +34,11 @@ const moduleRoutes = [
   {
     path:"/courses",
     route:courseRouter
+  }
+  ,
+  {
+    path:"/semester-registration",
+    route:semesterRegistrationRouter
   }
 ];
 
