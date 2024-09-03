@@ -23,7 +23,7 @@ sendResponse(res,{
 
 const getAllSemesterRegistrationFromDb = catchAsync(async(req,res)=>{
     
-    const result = await semesterRegistrationServices.getAllSemesterRegistrationFromDb()
+    const result = await semesterRegistrationServices.getAllSemesterRegistrationFromDb(req.query)
 
     sendResponse(res,{
         statusCode:httpStatus.OK,
