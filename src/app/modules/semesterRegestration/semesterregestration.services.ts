@@ -39,6 +39,14 @@ const createSemesterServiceIntoDb = async (payload:TsemesterRegistration)=>{
 
 
 
+const getAllSemesterRegistrationFromDb =async()=>{
+
+   const result = await SemesterRegistration.find()
+   return result 
+}
+
+
+
 
 
 
@@ -49,5 +57,6 @@ const createSemesterServiceIntoDb = async (payload:TsemesterRegistration)=>{
 // default Exports 
 
 export const  semesterRegistrationServices = {
-    createSemesterServiceIntoDb
+    createSemesterServiceIntoDb,
+    getAllSemesterRegistrationFromDb
 }

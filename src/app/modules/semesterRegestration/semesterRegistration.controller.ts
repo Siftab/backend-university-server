@@ -21,9 +21,23 @@ sendResponse(res,{
 })
 
 
+const getAllSemesterRegistrationFromDb = catchAsync(async(req,res)=>{
+    
+    const result = await semesterRegistrationServices.getAllSemesterRegistrationFromDb()
+
+    sendResponse(res,{
+        statusCode:httpStatus.OK,
+        success:true,
+        message:"All semester Data Retrived",
+        data: result
+    })
+})
+
+
 
 // default exports 
 
 export const semesterRegistrationControllers = {
-    createSemesterRegistrationIntoDB
+    createSemesterRegistrationIntoDB,
+    getAllSemesterRegistrationFromDb
 }
