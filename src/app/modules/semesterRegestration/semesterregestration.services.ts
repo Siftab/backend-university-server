@@ -36,7 +36,6 @@ const createSemesterServiceIntoDb = async (payload:TsemesterRegistration)=>{
   return result
 
 }
-// check giittoo
 
 
 
