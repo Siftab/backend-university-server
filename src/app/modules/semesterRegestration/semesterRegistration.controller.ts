@@ -35,9 +35,25 @@ const getAllSemesterRegistrationFromDb = catchAsync(async(req,res)=>{
 
 
 
+const getSingleSemester = catchAsync(async(req,res)=>{
+    const {id} = req.params
+    const result= await semesterRegistrationServices.getSingleSemester(id)
+
+
+    sendResponse(res,{
+        statusCode:httpStatus.OK,
+        success:true,
+        message:"data retrive succesfully ",
+        data:result
+    })
+})
+
+
+
 // default exports 
 
 export const semesterRegistrationControllers = {
     createSemesterRegistrationIntoDB,
-    getAllSemesterRegistrationFromDb
+    getAllSemesterRegistrationFromDb,
+    getSingleSemester
 }

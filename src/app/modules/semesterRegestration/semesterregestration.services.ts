@@ -41,12 +41,22 @@ const createSemesterServiceIntoDb = async (payload:TsemesterRegistration)=>{
 
 
 const getAllSemesterRegistrationFromDb =async(payload: Record<string,unknown>)=>{
-    const  semesterRegestrationQuery =new QueryBuilder(SemesterRegistration.find().populate('academicSemester'),payload)
+    const  semesterRegestrationQuery =new QueryBuilder(SemesterRegistration.find().populate('academicSemester'),payload).filter().sort().paginate()
 
-    const result =await semesterRegestrationQuery.filter().sort().paginate().fields()
+    const result =(await semesterRegestrationQuery.modelQuery)
 
 //    const result = await SemesterRegistration.find()
    return result 
+}
+
+
+const getSingleSemester = async(id:string)=>{
+
+
+    const result = await SemesterRegistration.findById(id)
+
+    return result
+
 }
 
 
@@ -62,5 +72,6 @@ const getAllSemesterRegistrationFromDb =async(payload: Record<string,unknown>)=>
 
 export const  semesterRegistrationServices = {
     createSemesterServiceIntoDb,
-    getAllSemesterRegistrationFromDb
+    getAllSemesterRegistrationFromDb,
+    getSingleSemester
 }
