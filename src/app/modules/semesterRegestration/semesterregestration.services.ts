@@ -4,6 +4,7 @@ import { AcademicSemester } from "../academicSemester/academicSemester.model";
 import { TsemesterRegistration } from "./semesterRegestration.interface";
 import { SemesterRegistration } from "./semsterRegistration.model";
 import QueryBuilder from "../../builder/QueryBuilder";
+import { TAcademicSemester } from "../academicSemester/academicSemester.interface";
 
 
 
@@ -60,6 +61,21 @@ const getSingleSemester = async(id:string)=>{
 }
 
 
+const updateSemesterRegistration = async(id:string, payload:Partial<TAcademicSemester>)=>{
+    
+
+
+
+
+    const result = SemesterRegistration.findByIdAndUpdate(id,
+        payload,
+        {
+            new:true
+        }
+    )
+    return result
+}
+
 
 
 
@@ -73,5 +89,6 @@ const getSingleSemester = async(id:string)=>{
 export const  semesterRegistrationServices = {
     createSemesterServiceIntoDb,
     getAllSemesterRegistrationFromDb,
-    getSingleSemester
+    getSingleSemester,
+    updateSemesterRegistration
 }

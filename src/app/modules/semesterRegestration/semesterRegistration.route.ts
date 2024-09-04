@@ -11,6 +11,7 @@ router.post("/create-semester-registration",validateRequest(semesterRegistration
 // getting all data 
 router.get("/",semesterRegistrationControllers.getAllSemesterRegistrationFromDb)
 router.get("/:id",semesterRegistrationControllers.getSingleSemester)
+router.patch("/update-course/:id",semesterRegistrationControllers.UpdateSemesterRegistration)
 
 
 export const semesterRegistrationRouter = router
