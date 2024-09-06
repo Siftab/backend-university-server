@@ -21,7 +21,7 @@ const createSemesterServiceIntoDb = async (payload:TsemesterRegistration)=>{
     if(isthereAnyUpcomingOrOngoingSemester){
         throw new AppError(httpStatus.BAD_REQUEST,`Already ${isthereAnyUpcomingOrOngoingSemester.status} semester Registration exists!`)
     }
-//  check
+//  checked
     const academicSemester = payload?.academicSemester;
     const isSemesterRegistrationExists = await SemesterRegistration.findOne({academicSemester})
 
