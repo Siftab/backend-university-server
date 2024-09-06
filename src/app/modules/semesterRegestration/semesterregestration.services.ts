@@ -11,6 +11,16 @@ import { TAcademicSemester } from "../academicSemester/academicSemester.interfac
 
 
 const createSemesterServiceIntoDb = async (payload:TsemesterRegistration)=>{
+
+    // checiking is there any upcoming or ongoing semester availabe 
+
+    const isthereAnyUpcomingOrOngoingSemester = await SemesterRegistration.findOne({
+        status:{$in:["ONGOING","UPCOMING"]}
+    })
+
+    if(isthereAnyUpcomingOrOngoingSemester){
+        throw new AppError(httpStatus.BAD_REQUEST,`Already ${isthereAnyUpcomingOrOngoingSemester.status} semester Registration exists!`)
+    }
  
     const academicSemester = payload?.academicSemester;
     const isSemesterRegistrationExists = await SemesterRegistration.findOne({academicSemester})
