@@ -21,7 +21,8 @@ const createSemesterServiceIntoDb = async (payload:TsemesterRegistration)=>{
     if(isthereAnyUpcomingOrOngoingSemester){
         throw new AppError(httpStatus.BAD_REQUEST,`Already ${isthereAnyUpcomingOrOngoingSemester.status} semester Registration exists!`)
     }
-//  checked
+
+
     const academicSemester = payload?.academicSemester;
     const isSemesterRegistrationExists = await SemesterRegistration.findOne({academicSemester})
 
@@ -72,6 +73,19 @@ const getSingleSemester = async(id:string)=>{
 
 
 const updateSemesterRegistration = async(id:string, payload:Partial<TAcademicSemester>)=>{
+
+
+    const semesterRegestrationExists = await SemesterRegistration.findById(id)
+
+    if(!semesterRegestrationExists){
+        throw new AppError(httpStatus.NOT_FOUND,'this semester is not exist')
+    }
+
+
+    if(semesterRegestrationExists?.status === "ENDED"){
+        throw new AppError(httpStatus.BAD_REQUEST,`this semester is ${semesterRegestrationExists?.status}`)
+
+    }
     
 
 
