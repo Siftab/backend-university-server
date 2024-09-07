@@ -1,0 +1,1 @@
+export const Days = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
