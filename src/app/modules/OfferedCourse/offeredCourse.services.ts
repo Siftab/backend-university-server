@@ -45,7 +45,7 @@ const createOfferedCourseIntoDb = async(payload : TOfferedCourse)=>{
 
 
     // checking academicFaculties belongings 
-    const isDepartmentBelongToFaculty = await AcademicDepartment.findOne(academicDepartment,academicFaculty)
+    const isDepartmentBelongToFaculty = await AcademicDepartment.findOne({_id:academicDepartment,academicFaculty})
     if(!isDepartmentBelongToFaculty){
         throw new AppError(httpStatus.BAD_REQUEST,`this ${isAcademicDepertmentExists.name} is not belongs to ${isAcademicFacultyExists.name}`)
     }
@@ -55,7 +55,7 @@ const createOfferedCourseIntoDb = async(payload : TOfferedCourse)=>{
         semesterRegistration,course,section
     })
 if(isSameOfferedCourseExistsWithSameRegistredSemeseterWithSameSection){
-    throw new AppError(httpStatus.BAD_REQUEST,"already offred this course ")
+    throw new AppError(httpStatus.BAD_REQUEST,"offered Course with same section is already exsits!!")
 }
 
 // final send 
