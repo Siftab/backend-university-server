@@ -66,7 +66,14 @@ const newSchedule = {days,startTime,endTime}
 
 assignSchedule.forEach((schedule)=>{
     
-})
+
+    const 
+
+    const 
+
+    const 
+
+const })
 
 // final send 
     const result = await  OfferedCourse.create({ ...payload,academicSemester})
