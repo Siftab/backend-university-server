@@ -26,6 +26,16 @@ const offeredCourseValidation = z.object({
         message:'Follow the "HH:MM " in 24 hour formats'
       }
     ),
+  }).refine((body)=>{
+
+
+    const start = new Date(`1945-01-01T${body.startTime}:00`)
+    const end = new Date(`1945-01-01T${body.endTime}:00`)
+
+    return end> start
+
+  },{
+    message:"start time should exist before endTime "
   }),
 });
 const updateOfferedCourseValidation = z.object({
