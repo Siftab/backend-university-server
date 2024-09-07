@@ -69,9 +69,10 @@ assignSchedule.forEach((schedule)=>{
 
     const newStartTime=  new Date(`2001-04-05T${newSchedule.startTime}`)
     const newEndTime=  new Date(`2001-04-05T${newSchedule.endTime}`)
-    const assignScheduleStartTime=  new Date(`2001-04-05T${schedule.startTime}`)
-    const assignScheduleEndTime=  new Date(`2001-04-05T${schedule.startTime}`)
-    if(0)zx
+    const existingScheduleStartTime=  new Date(`2001-04-05T${schedule.startTime}`)
+    const existingScheduleEndTime=  new Date(`2001-04-05T${schedule.startTime}`)
+    if(newStartTime <existingScheduleEndTime && newEndTime > existingScheduleStartTime)
+        throw new AppError(httpStatus.CONFLICT, "this faculty is not available for that time , choose other time or day ")
 
     })
 
