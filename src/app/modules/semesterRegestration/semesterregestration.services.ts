@@ -4,7 +4,6 @@ import { AcademicSemester } from "../academicSemester/academicSemester.model";
 import { TsemesterRegistration } from "./semesterRegestration.interface";
 import { SemesterRegistration } from "./semsterRegistration.model";
 import QueryBuilder from "../../builder/QueryBuilder";
-import { TAcademicSemester } from "../academicSemester/academicSemester.interface";
 
 
 
@@ -72,19 +71,29 @@ const getSingleSemester = async(id:string)=>{
 }
 
 
-const updateSemesterRegistration = async(id:string, payload:Partial<TAcademicSemester>)=>{
+const updateSemesterRegistration = async(id:string, payload:Partial<TsemesterRegistration>)=>{
 
-
+    const requestedStatus= payload.status
     const semesterRegestrationExists = await SemesterRegistration.findById(id)
+
+    const currentStatus = semesterRegestrationExists?.status
 
     if(!semesterRegestrationExists){
         throw new AppError(httpStatus.NOT_FOUND,'this semester is not exist')
     }
 
 
-    if(semesterRegestrationExists?.status === "ENDED"){
-        throw new AppError(httpStatus.BAD_REQUEST,`this semester is ${semesterRegestrationExists?.status}`)
+    if(currentStatus === "ENDED"){
+        throw new AppError(httpStatus.BAD_REQUEST,`this semester is ${currentStatus}`)
 
+    }
+
+
+    if(currentStatus ==="UPCOMING" && requestedStatus === "ENDED"){
+        throw new AppError(httpStatus.BAD_REQUEST,`can,t change ${currentStatus} to ${requestedStatus} directly `)
+    }
+    if(currentStatus ==="ONGOING" && requestedStatus === "UPCOMING"){
+        throw new AppError(httpStatus.BAD_REQUEST,`can,t change ${currentStatus} to ${requestedStatus} in reverse way`)
     }
     
 
