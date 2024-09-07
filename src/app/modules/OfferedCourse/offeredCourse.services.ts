@@ -67,7 +67,7 @@ const newSchedule = {days,startTime,endTime}
 assignSchedule.forEach((schedule)=>{
     
 
-    const 
+    const newStartTime=  new Date(`2001-04-05T${newSchedule.startTime}`)
 
     const 
 
