@@ -68,12 +68,11 @@ assignSchedule.forEach((schedule)=>{
     
 
     const newStartTime=  new Date(`2001-04-05T${newSchedule.startTime}`)
+    const newEndTime=  new Date(`2001-04-05T${newSchedule.endTime}`)
+    const assignScheduleStartTime=  new Date(`2001-04-05T${schedule.startTime}`)
+    const assignScheduleEndTime=  new Date(`2001-04-05T${schedule.startTime}`)
 
-    const 
-
-    const 
-
-const })
+    })
 
 // final send 
     const result = await  OfferedCourse.create({ ...payload,academicSemester})
