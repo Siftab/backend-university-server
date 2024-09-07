@@ -3,6 +3,9 @@ import AppError from "../../errors/AppError";
 import { SemesterRegistration } from "../semesterRegestration/semsterRegistration.model";
 import { OfferedCourse } from "./offeredCourse.,model";
 import { TOfferedCourse } from "./OfferedCourse.interface";
+import { AcademicDepartment } from "../academicDepartment/academicDepartment.model";
+import { Course, CourseFaculty } from "../course/course.model";
+import { AcademicFaculty } from "../academicFaculty/academicFaculty.model";
 
 
 
@@ -16,10 +19,32 @@ const createOfferedCourseIntoDb = async(payload : TOfferedCourse)=>{
     if(!isSemesterRegistrationExists){
         throw new AppError(httpStatus.BAD_REQUEST,"the semster id doesnt exist ")
     }
+    // check the academic department exist or not 
+    const isAcademicDepertmentExists = await  AcademicDepartment.findById(academicDepartment)
+    if(!isAcademicDepertmentExists){
+        throw new AppError(httpStatus.BAD_REQUEST,"the academic Department doesnt exist ")
+    }
+    // check the academic Faculty exist or not 
+    const isAcademicFacultyExists = await  AcademicFaculty.findById(academicFaculty)
+    if(!isAcademicFacultyExists){
+        throw new AppError(httpStatus.BAD_REQUEST,"the academic Faculty doesnt exist ")
+    }
+    // check course exist or not 
+    const isCourseExits = await Course.findById(course)
+    if(!isCourseExits){
+        throw new AppError(httpStatus.BAD_REQUEST,"Course doesnt exist ")
+    }
+    // check course exist or not 
+    const isFacultyExists = await CourseFaculty.findById(faculty)
+    if(!isFacultyExists){
+        throw new AppError(httpStatus.BAD_REQUEST,"Faculty  doesnt exist ")
+    }
+
+    const academicSemester =isSemesterRegistrationExists?.status
 
 
 
-    const result = await  OfferedCourse.create(payload)
+    const result = await  OfferedCourse.create({ ...payload,academicSemester})
 
     return result
 }

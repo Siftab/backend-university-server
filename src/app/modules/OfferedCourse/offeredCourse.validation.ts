@@ -12,8 +12,20 @@ const offeredCourseValidation = z.object({
     maxCapacity: z.number(),
     section: z.number(),
     days: z.enum([...Days] as [string, ...string[]]),
-    startTime: z.string(),
-    endTime: z.string(),
+    startTime: z.string().refine((time)=>
+    {const regex:RegExp =/^(?:[01]\d|2[0-3]):[0-5]\d$/
+      regex.test(time)
+    },{
+      message:'Follow the "HH:MM " in 24 hour formats'
+    }
+  ),
+    endTime: z.string().refine((time)=>
+      {const regex:RegExp =/^(?:[01]\d|2[0-3]):[0-5]\d$/
+        regex.test(time)
+      },{
+        message:'Follow the "HH:MM " in 24 hour formats'
+      }
+    ),
   }),
 });
 const updateOfferedCourseValidation = z.object({
@@ -26,9 +38,21 @@ const updateOfferedCourseValidation = z.object({
     faculty: z.string(),
     maxCapacity: z.number().optional(),
     section: z.number().optional(),
-    days: z.enum([...Days] as [string, ...string[]]),
-    startTime: z.string().optional(),
-    endTime: z.string().optional(),
+    days: z.array(z.enum([...Days] as [string, ...string[]])),
+    startTime: z.string().refine((time)=>
+      {const regex:RegExp =/^(?:[01]\d|2[0-3]):[0-5]\d$/
+        regex.test(time)
+      },{
+        message:'Follow the "HH:MM " in 24 hour formats'
+      }
+    ).optional(),
+    endTime: z.string().refine((time)=>
+      {const regex:RegExp =/^(?:[01]\d|2[0-3]):[0-5]\d$/
+        regex.test(time)
+      },{
+        message:'Follow the "HH:MM " in 24 hour formats'
+      }
+    ).optional(),
   }),
 });
 
