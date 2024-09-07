@@ -64,6 +64,10 @@ const assignSchedule = await OfferedCourse.find({semesterRegistration,faculty,da
 
 const newSchedule = {days,startTime,endTime}
 
+assignSchedule.forEach((schedule)=>{
+    
+})
+
 // final send 
     const result = await  OfferedCourse.create({ ...payload,academicSemester})
 
