@@ -44,6 +44,14 @@ const createOfferedCourseIntoDb = async(payload : TOfferedCourse)=>{
 
 
 
+    // checking academicFaculties belongings 
+    const isDepartmentBelongToFaculty = await AcademicDepartment.findOne(academicDepartment,academicFaculty)
+    if(!isDepartmentBelongToFaculty){
+        throw new AppError(httpStatus.BAD_REQUEST,`this ${isAcademicDepertmentExists.name} is not belongs to ${isAcademicFacultyExists.name}`)
+    }
+
+
+// final send 
     const result = await  OfferedCourse.create({ ...payload,academicSemester})
 
     return result
