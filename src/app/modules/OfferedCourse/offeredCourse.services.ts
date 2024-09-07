@@ -12,7 +12,7 @@ import { AcademicFaculty } from "../academicFaculty/academicFaculty.model";
 
 const createOfferedCourseIntoDb = async(payload : TOfferedCourse)=>{
 
-    const {semesterRegistration,academicDepartment,academicFaculty,faculty,course ,section}=payload
+    const {semesterRegistration,academicDepartment,academicFaculty,faculty,course ,section,days}=payload
 
     // check the semester exist or not 
     const isSemesterRegistrationExists = await  SemesterRegistration.findById(semesterRegistration)
@@ -57,6 +57,10 @@ const createOfferedCourseIntoDb = async(payload : TOfferedCourse)=>{
 if(isSameOfferedCourseExistsWithSameRegistredSemeseterWithSameSection){
     throw new AppError(httpStatus.BAD_REQUEST,"offered Course with same section is already exsits!!")
 }
+
+
+// time conflict 
+const assignSchedule = await OfferedCourse.find({semesterRegistration,faculty,days:{$in: days}}).select('days startTime endTime')
 
 // final send 
     const result = await  OfferedCourse.create({ ...payload,academicSemester})
