@@ -1,6 +1,7 @@
 import express from "express"
 import validateRequest from "../../middlewares/validateRequest"
 import { AuthValidation } from "./AuthValidation"
+import { authControllers } from "./auth.controller"
 
 
 
@@ -8,7 +9,7 @@ import { AuthValidation } from "./AuthValidation"
 const router = express.Router()
 
 
-router.post('/login',validateRequest(AuthValidation.loginValidationSchema))
+router.post('/login',validateRequest(AuthValidation.loginValidationSchema),authControllers.loginUser)
 
 
 
