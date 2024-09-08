@@ -17,3 +17,10 @@ export type TOfferedCourse = {
     endTime:string 
 
 }
+
+
+export type Tschedules ={
+    days: Days[],
+    startTime: string
+    endTime:string
+}
